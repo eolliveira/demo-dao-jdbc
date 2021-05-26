@@ -19,11 +19,14 @@ public class Program {
 
 		List<Seller> list = new ArrayList<>();
 
-		list = sd.findByDepartment(dep);
+		list = sd.findAll();
 
 		for (Seller s : list) {
 			System.out.println(s);
 		}
+		
+		System.out.println("==========================666");
+		
 
 	}
 
