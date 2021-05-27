@@ -9,6 +9,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.bind.DataBindingException;
+
+import com.mysql.jdbc.Statement;
+
 import db.DB;
 import db.DbException;
 import model.dao.SellerDAO;
@@ -26,7 +30,41 @@ public class SellerDaoJdbc implements SellerDAO {
 
 	@Override
 	public void insert(Seller obj) {
-		// TODO Auto-generated method stub
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		try {
+			ps = conn.prepareStatement("INSERT INTO seller\r\n" + 
+					"(Name, Email, BirthDate, BaseSalary, DepartmentId)\r\n" + 
+					"VALUES\r\n" + 
+					"(?, ?, ?, ?, ?)",
+					Statement.RETURN_GENERATED_KEYS);
+			
+			ps.setString(1, obj.getName());
+			ps.setString(2, obj.getEmail());
+			ps.setDate(3, new java.sql.Date(obj.getBirthDate().getTime()));
+			ps.setDouble(4, obj.getBaseSalary());
+			ps.setInt(5, obj.getDepartment().getId());
+			
+			int rowsAffected = ps.executeUpdate();
+			
+			if(rowsAffected > 0) {
+				rs = ps.getGeneratedKeys();
+				if(rs.next()) {
+					//pega o id inserido
+					int id = rs.getInt(1);
+					obj.setId(id);
+					System.out.println("Inserção concluida com sucesso! Id = " + obj.getId());
+				}
+			} else {
+				throw new DbException("Unexpected error! no affected line");
+			}
+		} catch (Exception e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(ps);
+		}
+		
 		
 	}
 
@@ -131,7 +169,7 @@ public class SellerDaoJdbc implements SellerDAO {
 			throw new DbException(e.getMessage());
 		}finally {
 			DB.closeStatement(ps);
-			DB.closeResultSEt(rs);
+			DB.closeResultSet(rs);
 		}
 	}
 
@@ -175,7 +213,6 @@ public class SellerDaoJdbc implements SellerDAO {
 			throw new DbException(e.getMessage());
 		}finally {
 			DB.closeStatement(ps);
-			DB.closeResultSEt(rs);
 		}
 	}
 

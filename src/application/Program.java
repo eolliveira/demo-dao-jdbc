@@ -1,31 +1,28 @@
 package application;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import model.dao.DaoFactory;
+import model.dao.DepartmentDAO;
 import model.dao.SellerDAO;
 import model.entities.Department;
 import model.entities.Seller;
 
 public class Program {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ParseException {
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-		System.out.println("==========================");
-
-		Department dep = new Department(1, null);
+		DepartmentDAO dd = DaoFactory.createDepartmentDao();
 
 		SellerDAO sd = DaoFactory.createSellerDao();
-
-		List<Seller> list = new ArrayList<>();
-
-		list = sd.findAll();
-
-		for (Seller s : list) {
-			System.out.println(s);
-		}
 		
-		System.out.println("==========================666");
+		Department dep = dd.findById(1);
+		
+		Seller seller = new Seller("Matheus Felipe", "matheuso@", sdf.parse("07/07/2020"), 1000.0, dep);
+		sd.insert(seller);
+		
 		
 
 	}

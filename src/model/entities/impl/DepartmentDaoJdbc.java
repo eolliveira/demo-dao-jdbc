@@ -61,7 +61,7 @@ public class DepartmentDaoJdbc implements DepartmentDAO {
 			throw new DbException(e.getMessage());
 		}finally {
 			DB.closeStatement(ps);
-			DB.closeResultSEt(rs);
+			DB.closeResultSet(rs);
 		}
 		
 		return null;

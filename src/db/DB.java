@@ -54,7 +54,7 @@ public class DB {
 		}
 	}
 	
-	public static void closeResultSEt(ResultSet rs) {
+	public static void closeResultSet(ResultSet rs) {
 		try {
 			rs.close();
 		} catch (SQLException e) {
